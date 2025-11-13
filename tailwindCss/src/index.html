@@ -36,10 +36,10 @@
                     <img src="images/recherche.png" alt="Recherche" class="w-8 h-8">
                 </button>
                 <!-- div choix menu -->
-                <div id="RecherchechBar" class="hidden absolute left-0.5 mt-2 z-10">
-                    <input type="text" id="searchInput" placeholder="Nom du jeu..."
-                        class="px-4 py-2 rounded bg-white text-black w-48">
-                    <button onclick="RechercheJeu()" class="ml-2 bg-amber-500 text-white px-3 py-2 rounded">
+                <div id="RecherchechBar" class="hidden absolute left-0.5 mt-2 z-10  bg-white rounded-2xl">
+                    <input type="search" id="searchInput" placeholder="Nom du jeu..."
+                        class="px-4 py-2 rounded-2xl bg-white text-black w-48">
+                    <button onclick="RechercheJeu()" class="ml-2 bg-amber-500 text-white px-3 py-2  rounded-r-2xl">
                         Rechercher
                     </button>
                 </div>
@@ -67,7 +67,7 @@
         <!-- div filtres -->
         <div class="btn_filter flex flex-col items-center mb-6 relative">
             <button onclick="toggleFilter()"
-                class="w-52 h-12  rounded-2xl flex flex-row justify-center gap-2 bg-white text-black font-medium py-3 px-6 rounded-full shadow-md hover:bg-amber-500 hover:text-white ">
+                class="w-52 h-12 flex flex-row justify-center gap-2 bg-white text-black font-medium py-3 px-6 rounded-full shadow-md hover:bg-amber-500 hover:text-white ">
                 <img src="images/icon_filter.png" alt="" class="w-5 h-5 mt-1">
                 filtrer
             </button>

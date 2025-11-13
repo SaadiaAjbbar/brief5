@@ -1,10 +1,12 @@
 const cards = document.querySelector(".cards");
 let tousJeux = [];
-let precedente=document.getElementById("precedente");
-let nextPage="https://debuggers-games-api.duckdns.org/api/games"
-let next=document.getElementById("next");
-let numpage=document.getElementById("numpage");
-let pagePrecedent=null;
+let precedente = document.getElementById("precedente");
+let nextPage = "https://debuggers-games-api.duckdns.org/api/games"
+let next = document.getElementById("next");
+let numpage = document.getElementById("numpage");
+let pagePrecedent = null;
+
+let searchInput = document.querySelector("input[type='search']");
 //menu
 function toggleMenu() {
     const menu = document.getElementById("menuliens");
@@ -28,13 +30,28 @@ async function getJeux() {
         const res = await fetch(nextPage);
         const mydata = await res.json();
         tousJeux = mydata.results;
-        numpage.textContent=mydata.page;
-        nextPage=mydata.next;
-        pagePrecedent=mydata.previous;
+        numpage.textContent = mydata.page;
+        nextPage = mydata.next;
+        pagePrecedent = mydata.previous;
+        //search method
+        searchInput.addEventListener("input", e => {
+            const value = e.target.value.toLowerCase();
+            const cardis = document.querySelectorAll(".cardi");
 
-        console.log(pagePrecedent);
+            cardis.forEach(card => {
+                const name = card.querySelector(".name").textContent.toLowerCase();
+
+
+                if (name.includes(value)) {
+                    card.style.display = "flex"; // afficher
+                } else {
+                    card.style.display = "none"; // cacher
+                }
+            });
+        });
+
         displayJeux(tousJeux);
-        
+
     } catch (error) {
         console.log(error);
     }
@@ -45,10 +62,26 @@ async function getPrecedente() {
         const res = await fetch(pagePrecedent);
         const mydata = await res.json();
         tousJeux = mydata.results;
-        nextPage=mydata.next;
-        numpage.textContent=mydata.page;
-        pagePrecedent=mydata.previous;
+        nextPage = mydata.next;
+        numpage.textContent = mydata.page;
+        pagePrecedent = mydata.previous;
 
+         //search method
+        searchInput.addEventListener("input", e => {
+            const value = e.target.value.toLowerCase();
+            const cardis = document.querySelectorAll(".cardi");
+
+            cardis.forEach(card => {
+                const name = card.querySelector(".name").textContent.toLowerCase();
+
+
+                if (name.includes(value)) {
+                    card.style.display = "flex"; // afficher
+                } else {
+                    card.style.display = "none"; // cacher
+                }
+            });
+        });
         console.log(pagePrecedent);
         displayJeux(tousJeux);
     } catch (error) {
@@ -67,7 +100,7 @@ function displayJeux(data) {
         const genres = result.genres.map(g => g.name).join(" , ");
         cardi.innerHTML = `
               <div class=" p-4 flex flex-col  w-full rounded-b-2xl h-2/5 text-white " style="background-color: rgba(30, 40, 58, 0.8);">
-               <h2 class="text-center font-bold">${result.name}</h2> 
+               <h2 class="name  text-center font-bold">${result.name}</h2> 
                <p class="text-sm"><span class="font-bold">Notes:</span> ${result.rating}</p>
                <p class="text-sm"><span class="font-bold">Genres:</span> ${genres}</p>
                <p class="text-sm"><span class="font-bold">Plateformes:</span> ${platforms}</p>
@@ -83,15 +116,15 @@ function displayJeux(data) {
 
 
 
-next.addEventListener("click",()=>{
+next.addEventListener("click", () => {
     console.log(" next")
- getJeux();
+    getJeux();
 })
-precedente.addEventListener("click",()=>{
+precedente.addEventListener("click", () => {
     console.log("precedente page")
-    if (pagePrecedent==null) {
+    if (pagePrecedent == null) {
         window.alert("vous etes dans la premiere page");
-    }else{
+    } else {
         getPrecedente();
     }
 })
