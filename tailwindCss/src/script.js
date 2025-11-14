@@ -66,7 +66,7 @@ async function getPrecedente() {
         numpage.textContent = mydata.page;
         pagePrecedent = mydata.previous;
 
-         //search method
+        //search method
         searchInput.addEventListener("input", e => {
             const value = e.target.value.toLowerCase();
             const cardis = document.querySelectorAll(".cardi");
@@ -93,26 +93,50 @@ function displayJeux(data) {
     cards.innerHTML = "";
     data.forEach(result => {
         const cardi = document.createElement("div");
-        cardi.className = `cardi flex justify-center items-end border-2 border-amber-600 rounded-2xl bg-contain bg-cover bg-no-repeat bg-center w-9/12 min-h-96`;
+        cardi.className = `cardi flex justify-center items-end border-2 border-amber-600 rounded-2xl bg-contain bg-cover bg-no-repeat bg-center w-9/12 min-h-96 cursor-pointer`;
         cardi.style.backgroundImage = `url('${result.background_image}')`;
 
-        const platforms = result.parent_platforms.map(p => p.platform.name).join(",");
+        const platforms = result.parent_platforms.map(p => p.platform.name).join(", ");
         const genres = result.genres.map(g => g.name).join(" , ");
+
         cardi.innerHTML = `
-              <div class=" p-4 flex flex-col  w-full rounded-b-2xl h-2/5 text-white " style="background-color: rgba(30, 40, 58, 0.8);">
-               <h2 class="name  text-center font-bold">${result.name}</h2> 
-               <p class="text-sm"><span class="font-bold">Notes:</span> ${result.rating}</p>
-               <p class="text-sm"><span class="font-bold">Genres:</span> ${genres}</p>
-               <p class="text-sm"><span class="font-bold">Plateformes:</span> ${platforms}</p>
-               <button class="hover:bg-white hover:text-amber-500 text-white bg-amber-500 font-semibold py-2 px-6 rounded-3xl">
-                 Ajouter au favoris
-               </button>
-              </div>
-            `;
+            <div class="p-4 flex flex-col w-full rounded-b-2xl h-2/5 text-white" style="background-color: rgba(30, 40, 58, 0.8);">
+                <h2 class="name text-center font-bold">${result.name}</h2> 
+                <p class="text-sm"><span class="font-bold">Notes:</span> ${result.rating}</p>
+                <p class="text-sm"><span class="font-bold">Genres:</span> ${genres}</p>
+                <p class="text-sm"><span class="font-bold">Plateformes:</span> ${platforms}</p>
+                <button class="hover:bg-white hover:text-amber-500 text-white bg-amber-500 font-semibold py-2 px-6 rounded-3xl">
+                    Ajouter au favoris
+                </button>
+            </div>
+        `;
+
+        // event de click sur jeu alors voir detail
+        cardi.addEventListener("click", () => {
+            document.getElementById("detailJeu").classList.remove("hidden");
+            document.getElementById("detailName").textContent = result.name;
+            document.getElementById("detailImage").src = result.background_image;
+            document.getElementById("detailGenres").textContent = "Genres: " + genres;
+            document.getElementById("detailPlatforms").textContent = "Plateformes: " + platforms;
+            document.getElementById("detailRating").textContent = "Notes: " + result.rating;
+            document.getElementById("detailDescription").textContent ="description:"+ result.description.slice(0,100) || "Pas de description disponible";
+        });
+
         cards.appendChild(cardi);
     });
 }
 
+// Close detail
+document.getElementById("closedetail").addEventListener("click", () => {
+    document.getElementById("detailJeu").classList.add("hidden");
+});
+
+// Optional: click f background → close detail
+document.getElementById("detailJeu").addEventListener("click", (e) => {
+    if (e.target.id === "detailJeu") {
+        document.getElementById("detailJeu").classList.add("hidden");
+    }
+});
 
 
 
