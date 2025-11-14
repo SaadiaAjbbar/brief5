@@ -1,4 +1,6 @@
 const cards = document.querySelector(".cards");
+
+let loading = document.getElementById("loading");
 let tousJeux = [];
 let precedente = document.getElementById("precedente");
 let nextPage = "https://debuggers-games-api.duckdns.org/api/games"
@@ -23,6 +25,22 @@ function RechercheToggle() {
     const recherch = document.getElementById("RecherchechBar");
     recherch.classList.toggle("hidden");
 }
+//*******fonction ajouter favoris
+function ajouterFavoris(jeu) {
+    let favoris = JSON.parse(localStorage.getItem("favoris")) || [];
+
+    // verifier cas  ajoutee deja
+    const existe = favoris.some(item => item.id === jeu.id);
+    if (!existe) {
+        favoris.push(jeu);
+        localStorage.setItem("favoris", JSON.stringify(favoris));
+        alert("Jeu ajouté au favoris !");
+    } else {
+        alert("Ce jeu est déjà dans vos favoris.");
+    }
+}
+
+
 
 //fetch data
 async function getJeux() {
@@ -56,7 +74,7 @@ async function getJeux() {
         console.log(error);
     }
 }
-//fetch precedents
+//fetch precedent page
 async function getPrecedente() {
     try {
         const res = await fetch(pagePrecedent);
@@ -90,6 +108,7 @@ async function getPrecedente() {
 }
 //afficher les jeux
 function displayJeux(data) {
+    loading.style.display = "none";
     cards.innerHTML = "";
     data.forEach(result => {
         const cardi = document.createElement("div");
@@ -105,11 +124,28 @@ function displayJeux(data) {
                 <p class="text-sm"><span class="font-bold">Notes:</span> ${result.rating}</p>
                 <p class="text-sm"><span class="font-bold">Genres:</span> ${genres}</p>
                 <p class="text-sm"><span class="font-bold">Plateformes:</span> ${platforms}</p>
-                <button class="hover:bg-white hover:text-amber-500 text-white bg-amber-500 font-semibold py-2 px-6 rounded-3xl">
-                    Ajouter au favoris
+                <button class="btn_fav hover:bg-white hover:text-amber-500 text-white bg-amber-500 font-semibold py-2 px-6 rounded-3xl">
+                  Ajouter au favoris
                 </button>
+
             </div>
         `;
+        // bouton ajouter au favoris
+        const btnFavoris = cardi.querySelector(".btn_fav");
+        btnFavoris.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const jeuFavoris = {
+                id: result.id,
+                name: result.name,
+                image: result.background_image,
+                rating: result.rating,
+                genres: genres,
+                platforms: platforms,
+                description: result.description || "Pas de description"
+            };
+
+            ajouterFavoris(jeuFavoris);
+        });
 
         // event de click sur jeu alors voir detail
         cardi.addEventListener("click", () => {
@@ -119,7 +155,7 @@ function displayJeux(data) {
             document.getElementById("detailGenres").textContent = "Genres: " + genres;
             document.getElementById("detailPlatforms").textContent = "Plateformes: " + platforms;
             document.getElementById("detailRating").textContent = "Notes: " + result.rating;
-            document.getElementById("detailDescription").textContent ="description:"+ result.description.slice(0,100) || "Pas de description disponible";
+            document.getElementById("detailDescription").textContent = "description:" + result.description.slice(0, 100) || "Pas de description disponible";
         });
 
         cards.appendChild(cardi);
@@ -141,7 +177,8 @@ document.getElementById("detailJeu").addEventListener("click", (e) => {
 
 
 next.addEventListener("click", () => {
-    console.log(" next")
+    console.log(" next");
+    cards.innerHTML="<img id='loading' src='images/loading.gif'>"
     getJeux();
 })
 precedente.addEventListener("click", () => {
@@ -149,6 +186,7 @@ precedente.addEventListener("click", () => {
     if (pagePrecedent == null) {
         window.alert("vous etes dans la premiere page");
     } else {
+        cards.innerHTML="<img id='loading' src='images/loading.gif'>"
         getPrecedente();
     }
 })
