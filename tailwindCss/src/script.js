@@ -112,7 +112,7 @@ function displayJeux(data) {
     cards.innerHTML = "";
     data.forEach(result => {
         const cardi = document.createElement("div");
-        cardi.className = `cardi flex justify-center items-end border-2 border-amber-600 rounded-2xl bg-contain bg-cover bg-no-repeat bg-center w-9/12 min-h-96 cursor-pointer`;
+        cardi.className = `cardi flex justify-center items-end border-2 border-amber-600 rounded-2xl bg-contain bg-cover bg-no-repeat bg-center w-9/12 min-h-96 cursor-pointer md:w-2/5 lg:w-[25%]`;
         cardi.style.backgroundImage = `url('${result.background_image}')`;
 
         const platforms = result.parent_platforms.map(p => p.platform.name).join(", ");
